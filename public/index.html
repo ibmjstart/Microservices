@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="store">
+
+  <head>
+    <title>Store</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheets/style.css">
+  </head>
+
+  <body>
+    <center>
+      <h1>Store Front</h1> <br>
+    </center>
+    <div id="store" ng-controller="StoreController as store">
+      <div class="container">
+        <div class="row" ng-repeat="rows in chunkedData">
+          <div class="col-lg-4" ng-repeat="product in rows">
+
+            <product></product>
+            
+            <product-tabs></product-tabs>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Dependencies -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- app code -->
+    <script src="client.js"></script>
+    <script src="products.js"></script>
+  </body>
+</html>
