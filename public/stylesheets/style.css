@@ -12,12 +12,44 @@ body {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fffaed', endColorstr='#fff2c9',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
+.navbar {
+	background-color: #FC6B6B;
+	color: white;
+}
+
+#cartLink {
+	cursor: pointer;
+	color: white;
+}
+
+#cartIconDiv{
+	text-align: right;
+	height: 92px;
+}
+
+#cartIcon {
+	font-size: 25px;
+	margin: 25px 0px 0px 0px;
+}
+
+#cartLabel {
+	font-size: 30px;
+}
+
+.navTitle{
+	width: 100%;
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 25px;
+  border: 4px solid white;
+}
+
 .panel {
 	padding: 0px 10px 0px 10px;
   border-radius: 0px;
 }
 
-h3 {
+.productTitle {
   color: whitesmoke;
   padding: 8px;
   background-color: rgb(51, 173, 183)
@@ -32,8 +64,8 @@ h3 {
 }
 
 ul {
-    list-style-type: none;
-    padding: 0px;
+  list-style-type: none;
+  padding: 0px;
 }
 
 .ng-invalid.ng-dirty {
