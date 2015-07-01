@@ -15,32 +15,37 @@
   <body>
     <nav class="navbar navbar-default navbar-static-top">
       <div class="container">
-          <div class="col-xs-4 col-xs-offset-4">
-            <h1 class="navTitle">Store</h1>
-          </div>
-          <div id="cartIconDiv" class="col-xs-4">
-            <a href="www.google.com" id="cartLink">
-              <span id="cartIcon"  class="glyphicon glyphicon-shopping-cart"></span>
-              <span id="cartLabel">Cart</span>
-            </a>
-          </div>
-      </div>
-    </nav>
-    <div id="store" ng-controller="StoreController as store">
-      <div class="container">
-        <div class="row" ng-repeat="rows in chunkedData">
-          <div class="col-lg-4" ng-repeat="product in rows">
-
-            <product></product>
-            <product-tabs></product-tabs>
-
-          </div>
+        <div id="homeIconDiv" class="col-xs-4">
+          <a href="#/" id="navLink">
+            <span id="navIcon"  class="glyphicon glyphicon-home"></span>
+            <span id="navLabel">Home</span>
+          </a>
+        </div>
+        <div class="col-xs-4 ">
+          <h1 class="navTitle">Store</h1>
+        </div>
+        <div id="cartIconDiv" class="col-xs-4">
+          <a href="#cart" id="navLink">
+            <span id="navIcon"  class="glyphicon glyphicon-shopping-cart"></span>
+            <span id="navLabel">Cart</span>
+          </a>
         </div>
       </div>
+    </nav>
+    <div ng-controller="mainController">
+      <div class="main">
+
+        <div ng-view></div>
+        <!-- angular templating -->
+        <!-- this is where content will be injected -->
+
+      </div>
     </div>
+
     <!-- Dependencies -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <!-- app code -->

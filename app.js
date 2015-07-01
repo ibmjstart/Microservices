@@ -19,7 +19,6 @@ if(process.env.VCAP_SERVICES){
 mongoose.connect(uri);
 
 // Mongoose Models
-var Bear = require('./models/bear');
 var Product = require('./models/product');
 
 // serve the files out of ./public as our main files
@@ -31,7 +30,7 @@ var bodyParser = require('body-parser')
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
-})); 
+}));
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
@@ -44,92 +43,17 @@ var router = express.Router();
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
-    console.log('Something is happening.');
+		var body = JSON.stringify(req.body);
+    console.log('[Request] '+req.method+' ' + req.url + ' - Body: ' + body);
     next();
 });
-
-router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
-});
-
-router.route('/bears')
-
-    // create a bear (accessed at POST http://localhost:6005/api/bears)
-    .post(function(req, res) {
-        
-        var bear = new Bear();      // create a new instance of the Bear model
-        bear.name = req.body.name;  // set the bears name (comes from the request)
-        // save the bear and check for errors
-        bear.save(function(err) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'Bear created! ('+req.body.name+')' });
-        });
-        
-    })
-
-    // get all the bears (accessed at GET http://localhost:6005/api/bears)
-    .get(function(req, res) {
-        Bear.find(function(err, bears) {
-            if (err)
-                res.send(err);
-
-            res.json(bears);
-        });
-    });
-
-router.route('/bears/:bear_id')
-
-    // get the bear with that id (accessed at GET http://localhost:6005/api/bears/:bear_id)
-    .get(function(req, res) {
-        Bear.findById(req.params.bear_id, function(err, bear) {
-            if (err)
-                res.send(err);
-            res.json(bear);
-        });
-    })
-
-    // update the bear with this id (accessed at PUT http://localhost:8080/api/bears/:bear_id)
-    .put(function(req, res) {
-
-        // use our bear model to find the bear we want
-        Bear.findById(req.params.bear_id, function(err, bear) {
-
-            if (err)
-                res.send(err);
-
-            bear.name = req.body.name;  // update the bears info
-
-            // save the bear
-            bear.save(function(err) {
-                if (err)
-                    res.send(err);
-
-                res.json({ message: 'Bear updated! (' + bear.name + ')'});
-            });
-
-        });
-    })
-
-    // delete the bear with this id (accessed at DELETE http://localhost:8080/api/bears/:bear_id)
-    .delete(function(req, res) {
-        Bear.remove({
-            _id: req.params.bear_id
-        }, function(err, bear) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'Successfully deleted (' +req.params.bear_id+ ')' });
-        });
-    });
 
 
 router.route('/products')
 
     // create a product (accessed at POST http://localhost:6005/api/products)
     .post(function(req, res) {
-        
+
         var product = new Product();      // create a new instance of the Product model
         product.name = req.body.name;  // set the products name (comes from the request)
         product.price = req.body.price;
@@ -142,7 +66,7 @@ router.route('/products')
 
             res.json({ message: 'Product created! ('+req.body.name+')' });
         });
-        
+
     })
 
     // get all the products (accessed at GET http://localhost:6005/api/products)
@@ -206,8 +130,8 @@ function randInt(min, max) {
 }
 
 app.get('/faker/:count', function(req, res) {
-    Product.remove({}, function(err) { 
-       console.log('collection removed') 
+    Product.remove({}, function(err) {
+       console.log('collection removed')
     });
     for (var i = 0; i < req.params.count; i++) {
         var sample = faker.fakeOut();
@@ -221,7 +145,7 @@ app.get('/faker/:count', function(req, res) {
             if (err) { console.log("Error faking data"); };
         });
     };
-   
+
     res.json({ message: 'Successfully faked '+req.params.count+' document(s)!' });
 });
 
