@@ -216,7 +216,7 @@ app.get('/faker/:count', function(req, res) {
         product.price = sample.price;
         product.description = sample.description;
         product.reviews = sample.reviews;
-        product.image = "http://lorempixel.com/350/350/?v="+randInt(0, 1000),
+        product.image = "http://lorempixel.com/360/300/?v="+randInt(0, 1000),
         product.save(function(err) {
             if (err) { console.log("Error faking data"); };
         });

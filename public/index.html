@@ -13,16 +13,12 @@
   </head>
 
   <body>
-    <center>
-      <h1>Store Front</h1> <br>
-    </center>
     <div id="store" ng-controller="StoreController as store">
       <div class="container">
         <div class="row" ng-repeat="rows in chunkedData">
           <div class="col-lg-4" ng-repeat="product in rows">
 
             <product></product>
-            
             <product-tabs></product-tabs>
 
           </div>
