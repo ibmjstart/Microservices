@@ -2,4 +2,12 @@
 	{{product.name}}
 	<em class="pull-right">{{product.price | currency}}</em>
 </h3>
-<img class="productImg" ng-src="{{product.image}}" alt="gem" />
+<div class="image-container">
+	<a href="http://getbootstrap.com/components/">
+		<img class="productImg" ng-src="{{product.image}}" alt="product image" />
+		<div class="after">
+			<span class="glyphicon glyphicon-plus-sign"></span>
+			<span class="addToCartLabel">add to cart</span>
+		</div>
+	</a>
+</div>

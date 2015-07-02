@@ -3,20 +3,21 @@
 
 	// configure our routes
 	app.config(function($routeProvider) {
-        $routeProvider
-				
-            // route for the home page
-            .when('/', {
-                templateUrl : 'home.html',
-                controller  : 'mainController'
-            })
+      $routeProvider
 
-            // route for the about page
-            .when('/cart', {
-                templateUrl : 'cart.html',
-                controller  : 'cartController'
-            })
-    });
+      // route for the home page
+      .when('/', {
+          templateUrl  : 'home.html',
+					controller   : 'StoreController',
+					controllerAs : 'store'
+      })
+
+      // route for the about page
+      .when('/cart', {
+          templateUrl : 'cart.html',
+          controller  : 'cartController'
+      })
+  });
 
 	app.controller('StoreController', [ '$http', '$scope', function($http, $scope){
 		var store = this;
@@ -28,11 +29,6 @@
 			$scope.chunkedData = chunk(data, 3);
 		});
 	}]);
-
-	app.controller('mainController', function($scope) {
-      // create a message to display in our view
-      $scope.message = 'Everyone come and see how good I look!';
-  });
 
 	app.controller('cartController', function($scope) {
       $scope.message = 'Look! I\'m a cart!';
