@@ -1,0 +1,17 @@
+<div id="store" ng-controller="StoreController as store">
+
+  <div class="jumbotron text-center" id="mainJumbo">
+      <h1>Welcome to the microservices demo!</h1>
+  </div>
+
+  <div class="container">
+    <div class="row" ng-repeat="rows in chunkedData">
+      <div class="col-lg-4" ng-repeat="product in rows">
+
+        <product></product>
+        <product-tabs></product-tabs>
+
+      </div>
+    </div>
+  </div>
+</div>
