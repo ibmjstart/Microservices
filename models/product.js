@@ -7,7 +7,8 @@ var ProductSchema = new Schema({
     stars: Number,
     image: String,
     description: String,
-    reviews: [{ stars: Number, body: String, author: String, createdAt: Date }]
+    reviews: [{ stars: Number, body: String, author: String, createdAt: Date }],
+    inCart: Boolean
 });
 
 module.exports = mongoose.model('Product', ProductSchema);

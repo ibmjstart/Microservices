@@ -33,7 +33,7 @@
     <input ng-model="reviewCtrl.review.author" type="email" class="form-control" placeholder="jimmyDean@example.org" title="Email"  required/>
   </fieldset>
   <fieldset class="form-group">
-    <div>reviewForm is {{reviewForm.$valid}}</div>
+    <div style="color:red;" ng-hide="reviewForm.$valid">Form incomplete</div>
     <input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
   </fieldset>
 </form>

@@ -3,11 +3,17 @@
 	<em class="pull-right">{{product.price | currency}}</em>
 </h3>
 <div class="image-container">
-	<a href="http://getbootstrap.com/components/">
+	<a href ng-click="store.cartToggle(product)">
 		<img class="productImg" ng-src="{{product.image}}" alt="product image" />
 		<div class="after">
-			<span class="glyphicon glyphicon-plus-sign"></span>
-			<span class="addToCartLabel">add to cart</span>
+			<div ng-if="product.inCart === true">
+				<span class="glyphicon glyphicon-minus-sign"></span>
+				<span class="removeFromCartLabel">remove from cart</span>
+			</div>
+			<div ng-if="!product.inCart">
+				<span class="glyphicon glyphicon-plus-sign"></span>
+				<span class="addToCartLabel">add to cart</span>
+			</div>
 		</div>
 	</a>
 </div>

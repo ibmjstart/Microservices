@@ -116,6 +116,12 @@ a {
   top: 176px;
   font-size: 30px;
 }
+.image-container .after .removeFromCartLabel {
+  position: absolute;
+  left: 68px;
+  top: 176px;
+  font-size: 30px;
+}
 
 .image-container:hover .after {
   opacity: 1;

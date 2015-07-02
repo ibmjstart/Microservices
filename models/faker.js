@@ -68,6 +68,6 @@ module.exports.fakeOut = function () {
 
   var sample = jsf(schema);
 
-  //console.log(sample.user.name);  
+  //console.log(sample.user.name);
   return sample;
 }

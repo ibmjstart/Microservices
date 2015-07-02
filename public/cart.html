@@ -3,4 +3,12 @@
         <h1>Cart Page</h1>
 
         <p>{{ message }}</p>
+        <p>
+          {{ cartCtrl.note }}
+        </p>
     </div>
+    <ul>
+      <li ng-repeat="item in cartCtrl.cart">
+        {{item.name}}
+      </li>
+    </ul>

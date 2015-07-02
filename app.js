@@ -60,6 +60,7 @@ router.route('/products')
         product.description = req.body.description;
         product.reviews = req.body.reviews;
         product.image = req.body.image;
+				product.inCart = req.body.inCart;
         product.save(function(err) {
             if (err)
                 res.send(err);
@@ -79,6 +80,17 @@ router.route('/products')
         });
     });
 
+router.route('/cart').get(function(req, res) {
+	Product.find({ inCart: true }, function(err, product) {
+		if (err)
+			res.send(err);
+		res.json(product);
+	});
+});
+
+router.route('/cron').get(function(req, res) {
+	res.json('Hello World');
+});
 
 router.route('/products/:product_id')
 
@@ -100,7 +112,7 @@ router.route('/products/:product_id')
             if (err)
                 res.send(err);
 
-            product.name = req.body.name;  // update the products info
+            product.inCart = req.body.inCart;  // update the products info
 
             // save the product
             product.save(function(err) {
@@ -140,7 +152,8 @@ app.get('/faker/:count', function(req, res) {
         product.price = sample.price;
         product.description = sample.description;
         product.reviews = sample.reviews;
-        product.image = "http://lorempixel.com/360/300/?v="+randInt(0, 1000),
+        product.image = "http://lorempixel.com/360/300/?v="+randInt(0, 1000);
+				product.inCart = false;
         product.save(function(err) {
             if (err) { console.log("Error faking data"); };
         });
