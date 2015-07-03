@@ -1,6 +1,8 @@
 (function(){
 	var app = angular.module('store', ['store-products', 'ngRoute']);
 
+
+
 	// configure our routes
 	app.config(function($routeProvider) {
 
@@ -25,9 +27,11 @@
 	    var cart = [];
 	    var cartService = {};
 
-			$http.get('/api/cart').success(function (data) {
-				cart = data;
-			});
+			cartService.load = function () {
+				$http.get('/api/cart').success(function (data) {
+					cart = data;
+				});
+			};
 
 	    cartService.add = function(product) {
 	        cart.push(product);
@@ -51,6 +55,10 @@
 	    };
 
 	    return cartService;
+	});
+
+	app.run(function(cart) {
+	  cart.load();
 	});
 
 
@@ -81,9 +89,16 @@
 		};
 	});
 
-	app.controller('cartController', function($scope, cart) {
-      $scope.message = 'Look! I\'m a cart!';
-			this.cart = cart.list();
+	app.controller('cartController', function($scope, $http) {
+		var contents = this;
+		contents.cart = [];
+
+		$http.get('/api/cart').success(function (data) {
+			contents.cart = data;
+		});
+
+    $scope.message = 'Look! I\'m a cart!';
+
   });
 
 	function chunk(arr, size) {
