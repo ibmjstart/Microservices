@@ -1,8 +1,6 @@
 (function(){
 	var app = angular.module('store', ['store-products', 'ngRoute']);
 
-
-
 	// configure our routes
 	app.config(function($routeProvider) {
 
@@ -34,20 +32,34 @@
 			};
 
 	    cartService.add = function(product) {
-	        cart.push(product);
+	      cart.push(product);
+
+				// update db
+				$http.put('/api/products/'+product._id, { inCart: true });
 	    };
 
-			cartService.remove = function (index) {
-				cart.splice(index, 1);
+			// determines whether or not the item is in the cart
+			cartService.inCart = function(product) {
+				for (var i = 0; i < cart.length; i++) {
+					if (cart[i]._id === product._id) {
+						return true;
+					}
+				}
+				return false;
 			};
 
-			cartService.find = function (id) {
-					for (var i = 0; i < cart.length; i++) {
-						if (cart[i]._id === id) {
-							return i;
-						}
+			cartService.remove = function (product) {
+				var index = -1;
+				for (var i = 0; i < cart.length; i++) {
+					if (cart[i]._id === product._id) {
+						index = i;
+						break;
 					}
-					return -1;
+				}
+				if (index !== -1) {
+					cart.splice(index, 1);
+					$http.put('/api/products/'+product._id, { inCart: false });
+				}
 			};
 
 	    cartService.list = function() {
@@ -73,23 +85,19 @@
 		});
 
 		this.cartToggle = function (product) {
-			var index = cart.find(product._id);
-			if (index === -1) {		// if not found -> add
-				cart.add(product);
+			if (!cart.inCart(product)) {		// if not found -> add
 				product.inCart = true;
+				cart.add(product);
 				console.log(product.name + " added to cart");
-			} else {							// if found -> remove
-				cart.remove(index);
+			} else {															// if found -> remove
 				product.inCart = false;
+				cart.remove(product);
 				console.log(product.name + " removed from cart");
 			}
-
-			// update db
-			$http.put('/api/products/'+product._id, { inCart: product.inCart });
 		};
 	});
 
-	app.controller('cartController', function($scope, $http) {
+	app.controller('cartController', function($scope, $http, cart) {
 		var contents = this;
 		contents.cart = [];
 
@@ -99,6 +107,23 @@
 
     $scope.message = 'Look! I\'m a cart!';
 
+		this.removeFromCart = function (product) {
+			if (cart.inCart(product)) {
+				product.inCart = false;
+
+				// remove from (global) cartService cart
+				cart.remove(product);
+
+				// remove from controller's cart
+				for (var i = 0; i < contents.cart.length; i++) {
+					if (contents.cart[i]._id === product._id) {
+						contents.cart.splice(i, 1);
+						break;
+					}
+				}
+				console.log(product.name + " removed from cart");
+			}
+		};
   });
 
 	function chunk(arr, size) {

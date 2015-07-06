@@ -9,15 +9,35 @@
     </div>
     <div class="container">
       <div class="row">
-        <div class="col-sm-6 col-sm-offset-6 panel">
-          <ul>
-            <li ng-repeat="product in cartCtrl.cart">
-              <h3 class="productTitle">
-              	{{product.name}}
-              	<em class="pull-right">{{product.price | currency}}</em>
-              </h3>
-            </li>
-          </ul>
+        <div class="col-sm-2">
+          <div id="cartButtons" class="btn-group-vertical" role="group" aria-label="...">
+            <a type="button" href="#checkout" class="btn btn-default">Checkout</a>
+            <a type="button" href="#/" class="btn btn-default">to Store</a>
+          </div>
+        </div>
+        <div class="col-sm-10">
+          <div class="cartPanel panel panel-default">
+
+            <!-- Table -->
+            <table class="table">
+              <tr>
+              	<th>Name</th>
+              	<th>Actions</th>
+              	<th>Cost</th>
+              </tr>
+              <tr ng-repeat="product in cartCtrl.cart">
+                <td>{{product.name}}</td>
+                <td>
+                  <a href ng-click="cartCtrl.removeFromCart(product)">
+                    <span class="glyphicon glyphicon-minus-sign"></span>
+                    Remove
+                  </a>
+                </td>
+                <td><em>{{product.price | currency}}</em></td>
+              </tr>
+            </table>
+
+          </div>
         </div>
       </div>
     </div>

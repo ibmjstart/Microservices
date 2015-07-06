@@ -88,10 +88,6 @@ router.route('/cart').get(function(req, res) {
 	});
 });
 
-router.route('/cron').get(function(req, res) {
-	res.json('Hello World');
-});
-
 router.route('/products/:product_id')
 
     // get the product with that id (accessed at GET http://localhost:6005/api/products/:product_id)
