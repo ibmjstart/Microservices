@@ -1,5 +1,5 @@
 (function(){
-	var app = angular.module('store', ['store-products', 'ngRoute']);
+	var app = angular.module('store', ['store-products', 'checkout', 'ngRoute']);
 
 	// configure our routes
 	app.config(function($routeProvider) {
@@ -76,11 +76,9 @@
 
 	app.controller('StoreController', function($http, $scope, cart){
 		var store = this;
-		store.products = [];
 		$scope.chunkedData = [];
 
 		$http.get('/api/products' ).success(function(data){
-			store.products = data;
 			$scope.chunkedData = chunk(data, 3);
 		});
 
@@ -95,17 +93,23 @@
 				console.log(product.name + " removed from cart");
 			}
 		};
+
 	});
 
 	app.controller('cartController', function($scope, $http, cart) {
-		var contents = this;
-		contents.cart = [];
+		var cartCtrl = this;
+		cartCtrl.cart = [];
+
+		cartCtrl.total = 0;
+		cartCtrl.count = 0;
 
 		$http.get('/api/cart').success(function (data) {
-			contents.cart = data;
+			cartCtrl.cart = data;
+			for (var i = 0; i < data.length; i++) {
+				cartCtrl.count++;
+				cartCtrl.total += data[i].price;
+			}
 		});
-
-    $scope.message = 'Look! I\'m a cart!';
 
 		this.removeFromCart = function (product) {
 			if (cart.inCart(product)) {
@@ -115,12 +119,17 @@
 				cart.remove(product);
 
 				// remove from controller's cart
-				for (var i = 0; i < contents.cart.length; i++) {
-					if (contents.cart[i]._id === product._id) {
-						contents.cart.splice(i, 1);
+				for (var i = 0; i < cartCtrl.cart.length; i++) {
+					if (cartCtrl.cart[i]._id === product._id) {
+						cartCtrl.cart.splice(i, 1);
 						break;
 					}
 				}
+
+				//update cart total and item count
+				cartCtrl.count--;
+				cartCtrl.total -= product.price;
+
 				console.log(product.name + " removed from cart");
 			}
 		};
@@ -132,6 +141,22 @@
 	    newArr.push(arr.slice(i, i+size));
 	  }
 	  return newArr;
+	}
+
+	jQuery.fn.highlight = function() {
+   $(this).each(function() {
+        var el = $(this);
+        el.before("<div/>")
+        el.prev()
+            .width(el.width())
+            .height(el.height())
+            .css({
+                "position": "absolute",
+                "background-color": "#ffff99",
+                "opacity": ".9"
+            })
+            .fadeOut(500);
+    });
 	}
 
 })();

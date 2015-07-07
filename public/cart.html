@@ -1,41 +1,97 @@
-<!-- about.html -->
-    <div class="jumbotron text-center">
-        <h1>Cart Page</h1>
+<!-- cart.html -->
+    <div class="jumbotron text-center jumbo">
 
-        <p>{{ message }}</p>
-        <p>
-          {{ cartCtrl.note }}
-        </p>
+        <h1><span class="glyphicon glyphicon-shopping-cart"></span>Cart</h1>
     </div>
     <div class="container">
       <div class="row">
         <div class="col-sm-2">
           <div id="cartButtons" class="btn-group-vertical" role="group" aria-label="...">
-            <a type="button" href="#checkout" class="btn btn-default">Checkout</a>
-            <a type="button" href="#/" class="btn btn-default">to Store</a>
+            <a type="button" href="#/" class="btn btn-default bigBtn">
+              <span class="glyphicon glyphicon-circle-arrow-left" id="backToCart"></span>
+              <p>Back to Store</p>
+            </a>
           </div>
         </div>
+
         <div class="col-sm-10">
           <div class="cartPanel panel panel-default">
 
             <!-- Table -->
             <table class="table">
-              <tr>
-              	<th>Name</th>
-              	<th>Actions</th>
-              	<th>Cost</th>
-              </tr>
-              <tr ng-repeat="product in cartCtrl.cart">
-                <td>{{product.name}}</td>
-                <td>
-                  <a href ng-click="cartCtrl.removeFromCart(product)">
-                    <span class="glyphicon glyphicon-minus-sign"></span>
-                    Remove
-                  </a>
-                </td>
-                <td><em>{{product.price | currency}}</em></td>
-              </tr>
+              <tbody>
+                <tr>
+                	<th>Name</th>
+                	<th>Actions</th>
+                	<th>Cost</th>
+                </tr>
+                <tr ng-repeat="product in cartCtrl.cart">
+                  <td>{{product.name}}</td>
+                  <td>
+                    <a href ng-click="cartCtrl.removeFromCart(product)">
+                      <span class="glyphicon glyphicon-minus-sign"></span>
+                      Remove
+                    </a>
+                  </td>
+                  <td><em>{{product.price | currency}}</em></td>
+                </tr>
+              </tbody>
             </table>
+          </div>
+
+          <div class="cartPanel panel panel-default col-sm-6 col-xs-12 pull-right">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th># of items</th>
+                  <th>Cart Total</th>
+                </tr>
+                <tr>
+                  <td>{{cartCtrl.count}}</td>
+                  <td>{{cartCtrl.total | currency}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+      <hr>
+
+      <div class="row" id="checkoutRow">
+        <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3" >
+          <center><h2>Checkout</h2></center>
+          <center ng-show="cartCtrl.count < 1"><h3>Add items to your cart before checking out.</h3></center>
+          <div class="panel checkoutPanel" ng-hide="cartCtrl.count < 1">
+
+            <!--  Checkout Form -->
+            <form name="checkoutForm" ng-controller="CheckoutController as checkoutCtrl" ng-submit="checkoutForm.$valid && checkoutCtrl.sendPayment(checkoutCtrl.payment, checkoutForm)" novalidate>
+
+              <!--  Live Preview -->
+              <blockquote >
+                <strong>{{checkoutCtrl.payment.cardNumber}} </strong> -
+                {{checkoutCtrl.payment.month}}/
+                {{checkoutCtrl.payment.year}}
+                <span style="margin-left: 2px;" ng-show="checkoutForm.$valid" class="glyphicon glyphicon-ok-sign"></span>
+              </blockquote>
+
+              <fieldset class="form-group">
+                <input type=text ng-model="checkoutCtrl.payment.cardNumber" class="form-control" pattern="[0-9]*" placeholder="Enter fake gift card number" required>
+              </fieldset>
+              <label>Card Expiration</label>
+              <fieldset class="form-group">
+                <div class="col-xs-5 col-sm-3  dateBox monthBox">
+                  <input class="form-control" ng-model="checkoutCtrl.payment.month" pattern="[0-9]{2}" type="text" placeholder="month (mm)" name="month" required>
+                </div>
+                <div class="col-xs-2 col-sm-1" style="max-width:15px; font-size: 23px;">/</div>
+                <div class="col-xs-5 col-sm-3 dateBox">
+                  <input class="form-control" ng-model="checkoutCtrl.payment.year" pattern="[0-9]{4}" type="text" placeholder="year (yyyy)" name="year" required>
+                </div>
+                <div class="col-sm-5 pull-right" style="padding-right: 0px;">
+                  <input type="submit" class="btn btn-primary pull-right" ng-disabled="checkoutForm.$invalid" value="Submit Order" />
+                </div>
+              </fieldset>
+            </form>
 
           </div>
         </div>

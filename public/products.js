@@ -1,12 +1,18 @@
 (function(){
 	var app = angular.module('store-products', []);
 
-	app.controller("ReviewController", function(){
-		this.review = {};
+	app.controller("ReviewController", function($http, $scope){
+		reviewCtrl = this;
+		$scope.reviews = [];
+		$http.get('/api/reviews/559c102dc48f5a7249000002').success(function(data){
+			$scope.reviews = data;
+		});
+		reviewCtrl.review = {};
 		this.addReview = function(product) {
-			this.review.createdOn = Date.now();
-			product.reviews.push(this.review)
-			this.review = {};
+			reviewCtrl.review.createdOn = Date.now();
+			debugger;
+			$http.put('/api/reviews/' + product._id, reviewCtrl.review);
+			reviewCtrl.review = {};
 		};
 	});
 
@@ -34,7 +40,7 @@
 				this.selectTab = function(setTab){
 					this.tab = setTab;
 				};
-				
+
 				this.isSelected = function(checkTab){
 					return this.tab === checkTab;
 				}

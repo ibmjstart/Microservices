@@ -22,9 +22,6 @@ module.exports.fakeOut = function () {
         },
         {
           $ref: '#/definitions/review'
-        },
-        {
-          $ref: '#/definitions/review'
         }
       ]
     },
@@ -55,13 +52,9 @@ module.exports.fakeOut = function () {
             type: 'string',
             format: 'email',
             faker: 'internet.email'
-          },
-          createdAt: {
-            type: 'string',
-            faker: 'date.past'
           }
         },
-        required: ['stars', 'body', 'author', 'createdAt'],
+        required: ['stars', 'body', 'author'],
       }
     }
   };

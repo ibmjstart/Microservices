@@ -12,6 +12,10 @@ body {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fffaed', endColorstr='#fff2c9',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
+hr {
+  border-top: 2px solid #E5E5E5;
+}
+
 .btn {
   border-radius: 0px;
 }
@@ -54,9 +58,9 @@ a {
 	height: 92px;
 }
 
-#mainJumbo {
-  background: rgb(255, 227, 140);
-    padding: 10px 0px 20px;
+.jumbo {
+  background: rgb(255, 235, 173);
+  padding: 10px 0px 20px;
 }
 
 .navTitle{
@@ -156,8 +160,20 @@ ul {
 
 /* --------------- C A R T --------------- */
 
+.bigBtn {
+  padding: 10px;
+  border-radius: 0px;
+  border: none;
+  background-color: rgb(213, 213, 213);
+}
+
+#backToCart {
+  padding: 5px;
+  font-size: 24px;
+}
+
 #cartButtons{
-  margin: auto;
+  margin: 0px auto 30px;
   display: block;
 }
 
@@ -167,4 +183,22 @@ ul {
 
 .cartPanel {
   padding: 5px;
+  color: whitesmoke;
+  border-radius: 1px;
+  background-color: rgb(126, 185, 197);
+}
+
+.checkoutPanel {
+  padding: 15px 15px 0px;
+  border-radius: 1px;
+  background-color: rgb(213, 213, 213);
+}
+
+.dateBox {
+  max-width: 100px;
+  padding: 0px 0px 10px 0px;
+}
+
+.monthBox {
+  padding: 0px
 }

@@ -20,6 +20,7 @@ mongoose.connect(uri);
 
 // Mongoose Models
 var Product = require('./models/product');
+var Review = require('./models/review');
 
 // serve the files out of ./public as our main files
 app.use(express.static(__dirname + '/public'));
@@ -35,11 +36,9 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 
-
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();
-
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
@@ -49,44 +48,68 @@ router.use(function(req, res, next) {
 });
 
 
-router.route('/products')
+router.route('/products').get(function(req, res) {
+    Product.find(function(err, products) {
+        if (err)
+            res.send(err);
 
-    // create a product (accessed at POST http://localhost:6005/api/products)
-    .post(function(req, res) {
-
-        var product = new Product();      // create a new instance of the Product model
-        product.name = req.body.name;  // set the products name (comes from the request)
-        product.price = req.body.price;
-        product.description = req.body.description;
-        product.reviews = req.body.reviews;
-        product.image = req.body.image;
-				product.inCart = req.body.inCart;
-        product.save(function(err) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'Product created! ('+req.body.name+')' });
-        });
-
-    })
-
-    // get all the products (accessed at GET http://localhost:6005/api/products)
-    .get(function(req, res) {
-        Product.find(function(err, products) {
-            if (err)
-                res.send(err);
-
-            res.json(products);
-        });
+        res.json(products);
     });
+});
+
+router.route('/checkout/verifyPayment').put(function(req, res) {
+	var now = new Date();
+	var currentMonth = now.getMonth();
+	var currentYear = now.getFullYear();
+
+	if (currentYear > req.body.year || (currentYear === req.body.year && currentMonth > req.body.month) ) {
+		return res.json({"status": "expired"});
+	}
+
+	// order processed, clear the cart.
+	Product.update({ inCart: true }, { $set: { inCart: false } }, { multi: true });
+
+	res.json({"status": "verified"});
+});
 
 router.route('/cart').get(function(req, res) {
-	Product.find({ inCart: true }, function(err, product) {
+	Product.find({ inCart: true }, function(err, products) {
 		if (err)
 			res.send(err);
-		res.json(product);
+		res.json(products);
 	});
 });
+
+router.route('/reviews/:product_id')
+	// get the reviews associated with the passed product id
+	.get(function(req, res) {
+			Review.find({ productId: req.params.product_id }, function(err, review) {
+					if (err)
+							res.send(err);
+					res.json(review);
+			});
+	})
+
+	// add a new review for a product
+	.put(function(req, res) {
+
+			// use our product model to find the product we want
+			Product.findById(req.params.product_id, function(err, product) {
+
+					if (err)
+							res.send(err);
+
+					product.inCart = req.body.inCart;  // update the products info
+
+					// save the product
+					product.save(function(err) {
+							if (err)
+									res.send(err);
+
+							res.json({ message: 'Product updated. (' + product._id + ')'});
+					});
+			});
+	});
 
 router.route('/products/:product_id')
 
@@ -99,7 +122,7 @@ router.route('/products/:product_id')
         });
     })
 
-    // update the product with this id (accessed at PUT http://localhost:8080/api/products/:product_id)
+		// update the product to be in the cart
     .put(function(req, res) {
 
         // use our product model to find the product we want
@@ -115,21 +138,8 @@ router.route('/products/:product_id')
                 if (err)
                     res.send(err);
 
-                res.json({ message: 'Product updated! (' + product.name + ')'});
+                res.json({ message: 'Product updated. (' + product._id + ')'});
             });
-
-        });
-    })
-
-    // delete the product with this id (accessed at DELETE http://localhost:8080/api/products/:product_id)
-    .delete(function(req, res) {
-        Product.remove({
-            _id: req.params.product_id
-        }, function(err, product) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'Successfully deleted (' +req.params.product_id+ ')' });
         });
     });
 
@@ -141,18 +151,33 @@ app.get('/faker/:count', function(req, res) {
     Product.remove({}, function(err) {
        console.log('collection removed')
     });
+
+		// faker.js creates fake json and we insert it into the DB
     for (var i = 0; i < req.params.count; i++) {
         var sample = faker.fakeOut();
         var product = new Product();      // create a new instance of the Product model
         product.name = sample.name;  // set the products name (comes from the request)
         product.price = sample.price;
         product.description = sample.description;
-        product.reviews = sample.reviews;
+
         product.image = "http://lorempixel.com/360/300/?v="+randInt(0, 1000);
 				product.inCart = false;
-        product.save(function(err) {
-            if (err) { console.log("Error faking data"); };
+        product.save(function(err, prod) {
+            if (err) { return console.error("Error faking data"); };
+
+						// save reviews
+						for (var i = 0; i < sample.reviews.length; i++) {
+							var review = new Review();
+							review.productId = prod.id;
+							review.stars = sample.reviews[i].stars;
+							review.body = sample.reviews[i].body;
+							review.author = sample.reviews[i].author
+							review.save(function(err) {
+			            if (err) { console.error("Error faking data"); };
+			        });
+						}
         });
+
     };
 
     res.json({ message: 'Successfully faked '+req.params.count+' document(s)!' });
