@@ -80,6 +80,12 @@ router.route('/cart').get(function(req, res) {
 	});
 });
 
+router.route('/cart/count').get(function(req, res) {
+	Product.count({ inCart: true }, function(err, count){
+		res.json({ count: count });
+	});
+});
+
 router.route('/reviews/:product_id')
 	// get the reviews associated with the passed product id
 	.get(function(req, res) {
@@ -91,24 +97,21 @@ router.route('/reviews/:product_id')
 	})
 
 	// add a new review for a product
-	.put(function(req, res) {
+	.post(function(req, res) {
 
-			// use our product model to find the product we want
-			Product.findById(req.params.product_id, function(err, product) {
+			var review = Review();
+			review.productId = req.body.productId;
+			review.stars = req.body.stars;
+			review.body = req.body.body;
+			review.author = req.body.author;
 
+			// save the new review
+			review.save(function(err) {
 					if (err)
 							res.send(err);
-
-					product.inCart = req.body.inCart;  // update the products info
-
-					// save the product
-					product.save(function(err) {
-							if (err)
-									res.send(err);
-
-							res.json({ message: 'Product updated. (' + product._id + ')'});
-					});
+					res.json({ message: 'Review Successfully Added!'});
 			});
+
 	});
 
 router.route('/products/:product_id')
@@ -149,7 +152,11 @@ function randInt(min, max) {
 
 app.get('/faker/:count', function(req, res) {
     Product.remove({}, function(err) {
-       console.log('collection removed')
+       console.log('product collection removed')
+    });
+
+		Review.remove({}, function(err) {
+       console.log('review collection removed')
     });
 
 		// faker.js creates fake json and we insert it into the DB
@@ -166,15 +173,17 @@ app.get('/faker/:count', function(req, res) {
             if (err) { return console.error("Error faking data"); };
 
 						// save reviews
-						for (var i = 0; i < sample.reviews.length; i++) {
+						for (var i = 0; i < 2; i++) {
 							var review = new Review();
+							var fakeReview = faker.fakeReview()
 							review.productId = prod.id;
-							review.stars = sample.reviews[i].stars;
-							review.body = sample.reviews[i].body;
-							review.author = sample.reviews[i].author
+							review.stars = fakeReview.stars;
+							review.body = fakeReview.body;
+							review.author = fakeReview.author;
 							review.save(function(err) {
 			            if (err) { console.error("Error faking data"); };
 			        });
+							review = null;
 						}
         });
 

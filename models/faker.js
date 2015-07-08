@@ -46,7 +46,7 @@ module.exports.fakeOut = function () {
           },
           body: {
             type: 'string',
-            faker: 'lorem.paragraph'
+            faker: 'lorem.sentence'
           },
           author: {
             type: 'string',
@@ -55,6 +55,43 @@ module.exports.fakeOut = function () {
           }
         },
         required: ['stars', 'body', 'author'],
+      }
+    }
+  };
+
+  var sample = jsf(schema);
+
+  //console.log(sample.user.name);
+  return sample;
+}
+
+module.exports.fakeReview = function () {
+  var jsf = require('json-schema-faker');
+
+  var schema = {
+    type: 'object',
+    properties: {
+      stars: {
+        $ref: '#/definitions/star'
+      },
+      body: {
+        type: 'string',
+        faker: 'lorem.paragraph'
+      },
+      author: {
+        type: 'string',
+        format: 'email',
+        faker: 'internet.email'
+      }
+    },
+
+    required: ['stars', 'body', 'author'],
+
+    definitions: {
+      star: {
+        type: 'integer',
+        minimum: 0,
+        maximum: 5
       }
     }
   };

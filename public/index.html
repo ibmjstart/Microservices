@@ -2,7 +2,7 @@
 <html ng-app="store">
 
   <head>
-    <title>Store</title>
+    <title>The Store</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=.7">
@@ -14,25 +14,9 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-default navbar-static-top">
-      <div class="container">
-        <div id="homeIconDiv" class="col-xs-4">
-          <a href="#/" id="navLink">
-            <span id="navIcon"  class="glyphicon glyphicon-home"></span>
-            <span id="navLabel">Store</span>
-          </a>
-        </div>
-        <div class="col-xs-4 ">
-          <h1 class="navTitle">The Shop</h1>
-        </div>
-        <div id="cartIconDiv" class="col-xs-4">
-          <a href="#cart" id="navLink">
-            <span id="navIcon"  class="glyphicon glyphicon-shopping-cart"></span>
-            <span id="navLabel">Cart</span>
-          </a>
-        </div>
-      </div>
-    </nav>
+
+    <store-header></store-header>
+
     <div>
       <div class="main">
 
@@ -47,12 +31,14 @@
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/async/dist/async.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/toastr/toastr.min.js"></script>
 
     <!-- app code -->
     <script src="client.js"></script>
-    <script src="products.js"></script>
-    <script src="checkout.js"></script>
+    <script src="products/products.js"></script>
+    <script src="cart/cart.js"></script>
+    <script src="reviews/review.js"></script>
   </body>
 </html>
