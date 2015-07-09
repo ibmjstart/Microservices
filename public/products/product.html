@@ -1,0 +1,19 @@
+<h3 class="productTitle">
+	{{product.name}}
+	<em class="pull-right">{{product.price | currency}}</em>
+</h3>
+<span class="image-container">
+	<a href ng-click="store.cartToggle(product)">
+		<img class="productImg" ng-src="{{product.image}}" alt="product image" />
+		<span class="after">
+			<span ng-if="product.inCart === true">
+				<span class="glyphicon glyphicon-minus-sign"></span>
+				<span class="removeFromCartLabel">remove from cart</span>
+			</span>
+			<span ng-if="!product.inCart">
+				<span class="glyphicon glyphicon-plus-sign"></span>
+				<span class="addToCartLabel">add to cart</span>
+			</span>
+		</span>
+	</a>
+</span>

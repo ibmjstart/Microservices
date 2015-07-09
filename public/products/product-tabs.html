@@ -1,0 +1,21 @@
+<section ng-init="tab = 1">
+
+  <ul class="nav nav-pills">
+    <li ng-class="{ active:panel.isSelected(1) }">
+      <a href ng-click="panel.selectTab(1)">Description</a>
+    </li>
+    <li ng-class="{ active:panel.isSelected(2) }">
+      <a href ng-click="panel.selectTab(2)">Reviews</a>
+    </li>
+  </ul>
+
+  <div class="product-panel panel" ng-show="panel.isSelected(1)">
+    <h4>Description</h4>
+    <p>{{product.description}}</p>
+  </div>
+
+  <div class="product-panel panel" ng-show="panel.isSelected(2)">
+    <reviews></reviews>
+  </div>
+
+</section>

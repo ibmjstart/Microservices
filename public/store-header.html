@@ -1,0 +1,20 @@
+<!-- Nav bar -->
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div id="homeIconDiv" class="col-xs-4">
+      <a href="#/" id="navLink">
+        <span id="navIcon"  class="glyphicon glyphicon-home"></span>
+        <span id="navLabel">Store</span>
+      </a>
+    </div>
+    <div class="col-xs-4 ">
+      <h1 class="navTitle">The Shop</h1>
+    </div>
+    <div id="cartIconDiv" class="col-xs-4">
+      <a href="#cart" id="navLink">
+        <span id="navIcon"  class="glyphicon glyphicon-shopping-cart"></span>
+        <span id="navLabel">Cart ({{$root.cartCount}})</span>
+      </a>
+    </div>
+  </div>
+</nav>

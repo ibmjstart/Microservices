@@ -1,0 +1,16 @@
+{
+  "name": "productServiceAPI",
+  "version": "0.0.1",
+  "description": "A Product Management Service for our store",
+  "scripts": {
+    "start": "node productApi.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.13.1",
+    "cfenv": "1.0.x",
+    "faker": "^2.1.5",
+    "express": "4.12.x",
+    "mongoose": "~3.6.13"
+  },
+  "repository": {}
+}

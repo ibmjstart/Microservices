@@ -1,0 +1,37 @@
+<div class="cartPanel panel panel-default">
+  <!-- Table -->
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+        <th>Cost</th>
+      </tr>
+      <tr ng-repeat="product in cartCtrl.cart">
+        <td>{{product.name}}</td>
+        <td>
+          <a href ng-click="cartCtrl.removeFromCart(product)">
+            <span class="glyphicon glyphicon-minus-sign"></span>
+            Remove
+          </a>
+        </td>
+        <td><em>{{product.price | currency}}</em></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="cartPanel panel panel-default col-sm-6 col-xs-12 pull-right">
+  <table class="table">
+    <tbody>
+      <tr>
+        <th># of items</th>
+        <th>Cart Total</th>
+      </tr>
+      <tr>
+        <td><h3>{{cartCtrl.count}}</h2></td>
+        <td><h3>{{cartCtrl.total | currency}}</h3></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
