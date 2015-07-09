@@ -12,6 +12,10 @@ body {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fffaed', endColorstr='#fff2c9',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
+.main {
+  margin-top: 93px;
+}
+
 hr {
   border-top: 2px solid #E5E5E5;
 }

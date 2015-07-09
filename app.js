@@ -1,15 +1,15 @@
-// BASE SETUP
-// =============================================================================
-
-// PACKAGES
 var express = require('express');
 var cfenv = require('cfenv');
 var app = express();
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var faker = require('./models/faker.js');
+var bodyParser = require('body-parser'); // not needed once split
+var mongoose = require('mongoose');			 // Same ^^
+var faker = require('faker');
 
-// MongoDB
+// serve the files out of ./public as our main files - only app.js
+app.use(express.static(__dirname + '/public'));
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+
+// MongoDB - used by all services
 if(process.env.VCAP_SERVICES){
 	var services = JSON.parse(process.env.VCAP_SERVICES);
 	uri = services.mongolab[0].credentials.uri;
@@ -19,28 +19,19 @@ if(process.env.VCAP_SERVICES){
 mongoose.connect(uri);
 
 // Mongoose Models
-var Product = require('./models/product');
-var Review = require('./models/review');
+var Product = require('./models/product'); // used in cart & product services
+var Review = require('./models/review');	 // used in review service
 
-// serve the files out of ./public as our main files
-app.use(express.static(__dirname + '/public'));
-app.use('/bower_components',  express.static(__dirname + '/bower_components'));
-
-// configure app to use bodyParser()
-var bodyParser = require('body-parser')
+// configure app to use bodyParser() - used by all services
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-// get the app environment from Cloud Foundry
-var appEnv = cfenv.getAppEnv();
-
-// ROUTES FOR OUR API
-// =============================================================================
+// Set up /api router - (all services)
 var router = express.Router();
 
-// middleware to use for all requests
+// middleware to use for all requests (JSON) - (all services)
 router.use(function(req, res, next) {
 		var body = JSON.stringify(req.body);
     console.log('[Request] '+req.method+' ' + req.url + ' - Body: ' + body);
@@ -48,13 +39,22 @@ router.use(function(req, res, next) {
 });
 
 
-router.route('/products').get(function(req, res) {
-    Product.find(function(err, products) {
-        if (err)
-            res.send(err);
+/* ------------------------------------------------------------------------
+--  C A R T  A P I  -------------------------------------------------------
+------------------------------------------------------------------------ */
 
-        res.json(products);
-    });
+router.route('/cart').get(function(req, res) {
+	Product.find({ inCart: true }, function(err, products) {
+		if (err)
+			res.send(err);
+		res.json(products);
+	});
+});
+
+router.route('/cart/count').get(function(req, res) {
+	Product.count({ inCart: true }, function(err, count){
+		res.json({ count: count });
+	});
 });
 
 router.route('/checkout/verifyPayment').put(function(req, res) {
@@ -72,19 +72,9 @@ router.route('/checkout/verifyPayment').put(function(req, res) {
 	res.json({"status": "verified"});
 });
 
-router.route('/cart').get(function(req, res) {
-	Product.find({ inCart: true }, function(err, products) {
-		if (err)
-			res.send(err);
-		res.json(products);
-	});
-});
-
-router.route('/cart/count').get(function(req, res) {
-	Product.count({ inCart: true }, function(err, count){
-		res.json({ count: count });
-	});
-});
+/* ------------------------------------------------------------------------
+--  R E V I E W S  A P I  -------------------------------------------------
+------------------------------------------------------------------------ */
 
 router.route('/reviews/:product_id')
 	// get the reviews associated with the passed product id
@@ -113,6 +103,19 @@ router.route('/reviews/:product_id')
 			});
 
 	});
+
+/* ------------------------------------------------------------------------
+--  P R O D U C T S  A P I  -----------------------------------------------
+------------------------------------------------------------------------ */
+
+router.route('/products').get(function(req, res) {
+    Product.find(function(err, products) {
+        if (err)
+            res.send(err);
+
+        res.json(products);
+    });
+});
 
 router.route('/products/:product_id')
 
@@ -146,53 +149,62 @@ router.route('/products/:product_id')
         });
     });
 
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
+	// Product json Faker
+	var jsonFaker = require('./faker.js');
 
-app.get('/faker/:count', function(req, res) {
-    Product.remove({}, function(err) {
-       console.log('product collection removed')
-    });
+	app.get('/faker/:count', function(req, res) {
+	    Product.remove({}, function(err) {
+	       console.log('product collection removed')
+	    });
 
-		Review.remove({}, function(err) {
-       console.log('review collection removed')
-    });
+			Review.remove({}, function(err) {
+	       console.log('review collection removed')
+	    });
 
-		// faker.js creates fake json and we insert it into the DB
-    for (var i = 0; i < req.params.count; i++) {
-        var sample = faker.fakeOut();
-        var product = new Product();      // create a new instance of the Product model
-        product.name = sample.name;  // set the products name (comes from the request)
-        product.price = sample.price;
-        product.description = sample.description;
+			// faker.js creates fake json and we insert it into the DB
+	    for (var i = 0; i < req.params.count; i++) {
+	        var sample = jsonFaker.fakeOut();
+	        var product = new Product();      // create a new instance of the Product model
+	        product.name = sample.name;  			// set the products name (comes from the request)
+	        product.price = sample.price;
+	        product.description = sample.description;
 
-        product.image = "http://lorempixel.com/360/300/?v="+randInt(0, 1000);
-				product.inCart = false;
-        product.save(function(err, prod) {
-            if (err) { return console.error("Error faking data"); };
+					// used to append to image url - this prevents caching
+					var randomInt = Math.floor(Math.random() * (1000 - 0));
 
-						// save reviews
-						for (var i = 0; i < 2; i++) {
-							var review = new Review();
-							var fakeReview = faker.fakeReview()
-							review.productId = prod.id;
-							review.stars = fakeReview.stars;
-							review.body = fakeReview.body;
-							review.author = fakeReview.author;
-							review.save(function(err) {
-			            if (err) { console.error("Error faking data"); };
-			        });
-							review = null;
-						}
-        });
+	        product.image = "http://lorempixel.com/360/300/?v=" + randomInt;
+					product.inCart = false;
+	        product.save(function(err, prod) {
+	            if (err) { return console.error("Error faking data"); };
 
-    };
+							// save reviews
+							for (var i = 0; i < 2; i++) {
+								var review = new Review();
+								var fakeReview = jsonFaker.fakeReview()
+								review.productId = prod.id;
+								review.stars = fakeReview.stars;
+								review.body = faker.lorem.sentence();
+								review.author = fakeReview.author;
+								review.save(function(err) {
+				            if (err) { console.error("Error faking data"); };
+				        });
+							}
+	        });
 
-    res.json({ message: 'Successfully faked '+req.params.count+' document(s)!' });
-});
+	    };
+
+			console.log('Successfully faked '+req.params.count+' document(s)!');
+	    res.json({ message: 'Successfully faked '+req.params.count+' document(s)!' });
+	});
+
+/* ------------------------------------------------------------------------
+--  S T A R T  S E R V E R  -----------------------------------------------
+------------------------------------------------------------------------ */
 
 app.use('/api', router);
+
+// get the app environment from Cloud Foundry
+var appEnv = cfenv.getAppEnv();
 
 // start server on the specified port and binding host
 app.listen(appEnv.port, appEnv.bind, function() {
