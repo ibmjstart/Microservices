@@ -13,7 +13,7 @@ if(process.env.VCAP_SERVICES){
 	var services = JSON.parse(process.env.VCAP_SERVICES);
 	uri = services.mongolab[0].credentials.uri;
 } else {
-	uri = 'mongodb://IbmCloud_mcm25pjd_u7fmoiet_6cc7rg12:LSwT7ochTr77iPzshuYFJeztlfHtXVj8@ds037802.mongolab.com:37802/IbmCloud_mcm25pjd_u7fmoiet';
+	uri = process.env.MONGO_URL;
 }
 mongoose.connect(uri);
 
