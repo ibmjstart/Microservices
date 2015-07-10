@@ -3,14 +3,20 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
-// serve the files out of ./public as our main files - only app.js
-app.use(express.static(__dirname + '/public'));
-app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+// configure app to use bodyParser() - used by all services
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
 
 // MongoDB - used by all services
 if(process.env.VCAP_SERVICES){
 	var services = JSON.parse(process.env.VCAP_SERVICES);
-	uri = services.mongolab[0].credentials.uri;
+  if(services.mongolab) {
+    uri = services.mongolab[0].credentials.uri;
+  } else {
+    uri = process.env.MONGO_URI;
+  }
 } else {
 	uri = process.env.MONGO_URI;
 }
@@ -18,12 +24,6 @@ mongoose.connect(uri);
 
 // Mongoose Models
 var Review = require('./models/review');	 // used in review service
-
-// configure app to use bodyParser() - used by all services
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-}));
 
 // Set up /api router - (all services)
 var router = express.Router();

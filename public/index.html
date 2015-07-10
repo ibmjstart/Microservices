@@ -14,17 +14,9 @@
 
     <script>
         // globally set the API URLS
-        if (window.location.href === 'http://localhost:8080/' || window.location.href === 'http://localhost:8080/#/') {
-            // if running api services on localhost leave them empty
-            var productsApi = '';
-            var cartApi     = '';
-            var reviewApi   = '';
-        } else {
-            // if running in seperate containers
-            var productsApi = 'http://192.168.59.103:49162';
-            var cartApi     = 'http://192.168.59.103:49161';
-            var reviewApi   = 'http://192.168.59.103:49160';
-        }
+        var productsApi = '';
+        var cartApi     = '';
+        var reviewApi   = '';
     </script>
 
   </head>

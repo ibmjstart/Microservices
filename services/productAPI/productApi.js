@@ -4,16 +4,19 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 // configure app to use bodyParser()
-var bodyParser = require('body-parser')
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-// MongoDB
+// MongoDB - used by all services
 if(process.env.VCAP_SERVICES){
 	var services = JSON.parse(process.env.VCAP_SERVICES);
-	uri = services.mongolab[0].credentials.uri;
+  if(services.mongolab) {
+    uri = services.mongolab[0].credentials.uri;
+  } else {
+    uri = process.env.MONGO_URI;
+  }
 } else {
 	uri = process.env.MONGO_URI;
 }
