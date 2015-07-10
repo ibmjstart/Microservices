@@ -6,7 +6,7 @@
 		var store = this;
 		store.products = [];
 
-		$http.get('/api/products' ).success(function(data){
+		$http.get(productsApi + '/api/products' ).success(function(data){
 			async.map(data, reviewService.addReviews, function(err, results){
 
 				// we need to chunk for formatting in bootstrap rows

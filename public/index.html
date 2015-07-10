@@ -11,6 +11,22 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="bower_components/toastr/toastr.min.css">
     <link rel="stylesheet" href="stylesheets/style.css">
+
+    <script>
+        // globally set the API URLS
+        if (window.location.href === 'http://localhost:8080/' || window.location.href === 'http://localhost:8080/#/') {
+            // if running api services on localhost leave them empty
+            var productsApi = '';
+            var cartApi     = '';
+            var reviewApi   = '';
+        } else {
+            // if running in seperate containers
+            var productsApi = 'http://192.168.59.103:49162';
+            var cartApi     = 'http://192.168.59.103:49161';
+            var reviewApi   = 'http://192.168.59.103:49160';
+        }
+    </script>
+
   </head>
 
   <body>

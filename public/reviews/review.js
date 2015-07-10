@@ -4,7 +4,7 @@
   app.factory('reviewService', ['$http', function($http) {
 		var reviewServices = {};
 		reviewServices.addReviews = function (product, callback) {
-			$http.get('/api/reviews/' + product._id).success(function(data){
+			$http.get(reviewApi + '/api/reviews/' + product._id).success(function(data){
 				product.reviews = data;
 				callback(null, product);
 			});
@@ -18,7 +18,7 @@
 		this.addReview = function(product) {
 			product.reviews.push(this.review);
 			this.review.productId = product._id;
-			$http.post('/api/reviews/' + product._id, this.review);
+			$http.post(reviewApi + '/api/reviews/' + product._id, this.review);
 			this.review = {};
 		};
 	});

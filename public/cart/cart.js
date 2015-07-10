@@ -6,7 +6,7 @@
 	    var cartService = {};
 
 			cartService.load = function () {
-				$http.get('/api/cart').success(function (data) {
+				$http.get(cartApi + '/api/cart').success(function (data) {
 					cart = data;
 				});
 			};
@@ -16,7 +16,7 @@
         $rootScope.cartCount++;
 
 				// update db
-				$http.put('/api/products/'+product._id, { inCart: true });
+				$http.put(cartApi + '/api/products/'+product._id, { inCart: true });
 	    };
 
 			// determines whether or not the item is in the cart
@@ -40,7 +40,7 @@
 				if (index !== -1) {
           $rootScope.cartCount--;
 					cart.splice(index, 1);
-					$http.put('/api/products/'+product._id, { inCart: false });
+					$http.put(cartApi + '/api/products/'+product._id, { inCart: false });
 				}
 			};
 
@@ -55,7 +55,7 @@
     var checkout = this;
     checkout.payment = {};
     this.sendPayment = function(payment, form) {
-      $http.put('/api/checkout/verifyPayment', payment).success(function(res){
+      $http.put(cartApi + '/api/checkout/verifyPayment', payment).success(function(res){
         if (res.status === "verified") {
           form.$setPristine(true);
           checkout.payment = {};
@@ -79,7 +79,7 @@
 		cartCtrl.total = 0;
 		cartCtrl.count = 0;
 
-		$http.get('/api/cart').success(function (data) {
+		$http.get(cartApi + '/api/cart').success(function (data) {
 			cartCtrl.cart = data;
 			for (var i = 0; i < data.length; i++) {
 				cartCtrl.count++;

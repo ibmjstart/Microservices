@@ -1,5 +1,4 @@
 var express = require('express');
-var cfenv = require('cfenv');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
@@ -75,9 +74,9 @@ router.route('/reviews/:product_id')
 app.use('/api', router);
 
 // get the app environment from Cloud Foundry
-var appEnv = cfenv.getAppEnv();
+var port = process.env.PORT || 8080;
 
 // start server on the specified port and binding host
-app.listen(appEnv.port, appEnv.bind, function() {
-  console.log("server starting on " + appEnv.url);
+app.listen(port, function() {
+  console.log("server starting on port: " + port);
 });

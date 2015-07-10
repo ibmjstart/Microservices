@@ -1,5 +1,4 @@
 var express = require('express');
-var cfenv = require('cfenv');
 var app = express();
 var bodyParser = require('body-parser'); // not needed once split
 var mongoose = require('mongoose');			 // Same ^^
@@ -33,6 +32,8 @@ var router = express.Router();
 
 // middleware to use for all requests (JSON) - (all services)
 router.use(function(req, res, next) {
+		res.header("Access-Control-Allow-Origin", "*");
+		res.header("Access-Control-Allow-Headers", "X-Requested-With");
 		var body = JSON.stringify(req.body);
     console.log('[Request] '+req.method+' ' + req.url + ' - Body: ' + body);
     next();
@@ -165,7 +166,7 @@ router.route('/products/:product_id')
 	    for (var i = 0; i < req.params.count; i++) {
 	        var sample = jsonFaker.fakeOut();
 	        var product = new Product();      // create a new instance of the Product model
-	        product.name = sample.name;  			// set the products name (comes from the request)
+	        product.name = sample.name;  	  // set the products name (comes from the request)
 	        product.price = sample.price;
 	        product.description = sample.description;
 
@@ -204,9 +205,9 @@ router.route('/products/:product_id')
 app.use('/api', router);
 
 // get the app environment from Cloud Foundry
-var appEnv = cfenv.getAppEnv();
+var port = process.env.PORT || 8080;
 
 // start server on the specified port and binding host
-app.listen(appEnv.port, appEnv.bind, function() {
-  console.log("server starting on " + appEnv.url);
+app.listen(port, function() {
+  console.log("server starting on port: " + port);
 });

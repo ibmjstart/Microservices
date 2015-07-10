@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "body-parser": "^1.13.1",
-    "cfenv": "1.0.x",
     "faker": "^2.1.5",
     "express": "4.12.x",
     "mongoose": "~3.6.13"
