@@ -15,7 +15,7 @@ if(process.env.VCAP_SERVICES){
 	var services = JSON.parse(process.env.VCAP_SERVICES);
 	uri = services.mongolab[0].credentials.uri;
 } else {
-	uri = process.env.MONGO_URL;
+	uri = process.env.MONGO_URI;
 }
 mongoose.connect(uri);
 
