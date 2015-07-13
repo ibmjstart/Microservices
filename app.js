@@ -155,53 +155,57 @@ router.route('/products/:product_id')
         });
     });
 
-	// Product json Faker
-	var jsonFaker = require('./faker.js');
+/* ------------------------------------------------------------------------
+--  F A K E R  A P I  -----------------------------------------------------
+------------------------------------------------------------------------ */
 
-	app.get('/faker/:count', function(req, res) {
-	    Product.remove({}, function(err) {
-	       console.log('product collection removed')
-	    });
+// Product json Faker
+var jsonFaker = require('./faker.js');
 
-			Review.remove({}, function(err) {
-	       console.log('review collection removed')
-	    });
+app.get('/faker/:count', function(req, res) {
+    Product.remove({}, function(err) {
+       console.log('product collection removed')
+    });
 
-			// faker.js creates fake json and we insert it into the DB
-	    for (var i = 0; i < req.params.count; i++) {
-	        var sample = jsonFaker.fakeOut();
-	        var product = new Product();      // create a new instance of the Product model
-	        product.name = sample.name;  	  // set the products name (comes from the request)
-	        product.price = sample.price;
-	        product.description = sample.description;
+		Review.remove({}, function(err) {
+       console.log('review collection removed')
+    });
 
-					// used to append to image url - this prevents caching
-					var randomInt = Math.floor(Math.random() * (1000 - 0));
+		// faker.js creates fake json and we insert it into the DB
+    for (var i = 0; i < req.params.count; i++) {
+        var sample = jsonFaker.fakeOut();
+        var product = new Product();      // create a new instance of the Product model
+        product.name = sample.name;  	  // set the products name (comes from the request)
+        product.price = sample.price;
+        product.description = sample.description;
 
-	        product.image = "http://lorempixel.com/360/300/?v=" + randomInt;
-					product.inCart = false;
-	        product.save(function(err, prod) {
-	            if (err) { return console.error("Error faking data"); };
+				// used to append to image url - this prevents caching
+				var randomInt = Math.floor(Math.random() * (1000 - 0));
 
-							// save reviews
-							for (var i = 0; i < 2; i++) {
-								var review = new Review();
-								var fakeReview = jsonFaker.fakeReview()
-								review.productId = prod.id;
-								review.stars = fakeReview.stars;
-								review.body = faker.lorem.sentence();
-								review.author = fakeReview.author;
-								review.save(function(err) {
-				            if (err) { console.error("Error faking data"); };
-				        });
-							}
-	        });
+        product.image = "http://lorempixel.com/360/300/?v=" + randomInt;
+				product.inCart = false;
+        product.save(function(err, prod) {
+            if (err) { return console.error("Error faking data"); };
 
-	    };
+						// save reviews
+						for (var i = 0; i < 2; i++) {
+							var review = new Review();
+							var fakeReview = jsonFaker.fakeReview()
+							review.productId = prod.id;
+							review.stars = fakeReview.stars;
+							review.body = faker.lorem.sentence();
+							review.author = fakeReview.author;
+							review.save(function(err) {
+			            if (err) { console.error("Error faking data"); };
+			        });
+						}
+        });
 
-			console.log('Successfully faked '+req.params.count+' document(s)!');
-	    res.json({ message: 'Successfully faked '+req.params.count+' document(s)!' });
-	});
+    };
+
+		console.log('Successfully faked '+req.params.count+' document(s)!');
+    res.json({ message: 'Successfully faked '+req.params.count+' document(s)!' });
+});
 
 /* ------------------------------------------------------------------------
 --  S T A R T  S E R V E R  -----------------------------------------------
