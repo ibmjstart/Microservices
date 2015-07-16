@@ -37,8 +37,6 @@ var router = express.Router();
 
 // middleware to use for all requests (JSON) - (all services)
 router.use(function(req, res, next) {
-		res.header("Access-Control-Allow-Origin", "*");
-		res.header("Access-Control-Allow-Headers", "X-Requested-With");
 		var body = JSON.stringify(req.body);
     console.log('[Request] '+req.method+' ' + req.url + ' - Body: ' + body);
     next();
