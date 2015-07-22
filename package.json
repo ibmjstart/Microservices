@@ -13,5 +13,9 @@
     "mongoose": "~3.6.13",
     "json-schema-faker": "^0.1.13"
   },
-  "repository": {}
+  "repository": {},
+  "scripts": {
+    "postinstall" : "npm install -g bower && bower cache clean && bower install"
+  }
+}
 }
