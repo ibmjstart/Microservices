@@ -1,7 +1,6 @@
 {
-  "name": "NodejsStarterApp",
+  "name": "Store",
   "version": "0.0.1",
-  "description": "A sample nodejs app for Bluemix",
   "scripts": {
     "start": "node app.js"
   },
@@ -13,8 +12,5 @@
     "mongoose": "~3.6.13",
     "json-schema-faker": "^0.1.13"
   },
-  "repository": {},
-  "scripts": {
-    "postinstall" : "npm install -g bower && bower cache clean && bower install"
-  }
+  "repository": {}
 }
