@@ -15,6 +15,6 @@
   },
   "repository": {},
   "scripts": {
-    "postinstall" : "npm install -g bower && bower install"
+    "postinstall" : "npm install -g bower && bower cache clean && bower install"
   }
 }
