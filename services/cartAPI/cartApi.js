@@ -44,6 +44,9 @@ var Product = require('./models/product');
 // Set up /api router
 var router = express.Router();
 
+// allow cross origin
+router.use(allowCrossDomain);
+
 // middleware to use for all requests (JSON)
 router.use(function(req, res, next) {
 		var body = JSON.stringify(req.body);

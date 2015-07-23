@@ -44,6 +44,9 @@ var Review = require('./models/review');	 // used in review service
 // Set up /api router - (all services)
 var router = express.Router();
 
+// allow cross origin
+router.use(allowCrossDomain);
+
 // middleware to use for all requests (JSON) - (all services)
 router.use(function(req, res, next) {
 		var body = JSON.stringify(req.body);

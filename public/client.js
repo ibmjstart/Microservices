@@ -26,7 +26,7 @@
 
 	app.controller("HeaderController", function($http, $rootScope, $scope){
 		$rootScope.cartCount = 0;
-		$http.get('/api/cart/count').success(function(res){
+		$http.get(cartApi + '/api/cart/count').success(function(res){
 			$rootScope.cartCount = res.count;
 		});
   });

@@ -4,6 +4,22 @@ var bodyParser = require('body-parser'); // not needed once split
 var mongoose = require('mongoose');			 // Same ^^
 var faker = require('faker');
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+      res.send(200);
+    }
+    else {
+      next();
+    }
+};
+
+app.use(allowCrossDomain);
+
 // serve the files out of ./public as our main files - only app.js
 app.use(express.static(__dirname + '/public'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
@@ -34,6 +50,9 @@ var Review = require('./models/review');	 // used in review service
 
 // Set up /api router - (all services)
 var router = express.Router();
+
+// allow cross origin
+router.use(allowCrossDomain);
 
 // middleware to use for all requests (JSON) - (all services)
 router.use(function(req, res, next) {
